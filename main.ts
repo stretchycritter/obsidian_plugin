@@ -65,6 +65,20 @@ export default class MyPlugin extends Plugin {
 			}
 		});
 
+		// This adds a command to pop a notification
+		// Note: This command must be manually added to the mobile toolbar by the user.
+		// The Obsidian API does not currently support programmatically adding commands to the mobile toolbar.
+		this.addCommand({
+			id: 'show-notification-command',
+			name: 'Show notification',
+			icon: 'bell',
+			callback: () => {
+				new Notice('This is a notification!');
+			}
+		});
+
+		console.log("Sample Plugin: To use the 'Show notification' command on mobile, add it to the mobile toolbar in Settings -> Mobile -> Manage toolbar options.");
+
 		// This adds a settings tab so the user can configure various aspects of the plugin
 		this.addSettingTab(new SampleSettingTab(this.app, this));
 
