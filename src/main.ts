@@ -29,6 +29,30 @@ export default class MyPlugin extends Plugin {
 		});
 		// This adds an editor command that can perform some operation on the current editor instance
 		this.addCommand({
+			id: 'get-note-info',
+			name: 'Get note info',
+			editorCallback: (editor: Editor, view: MarkdownView) => {
+				const file = this.app.workspace.getActiveFile();
+				if (!file) {
+					return;
+				}
+
+				const content = editor.getValue();
+				const blocks = content.split('\n\n').filter(block => block.trim() !== '');
+				const lastBlock = blocks.length > 0 ? blocks[blocks.length - 1] : '';
+				const lastBlockLength = lastBlock.length;
+
+				const fileCache = this.app.metadataCache.getFileCache(file);
+				const propertiesCount = fileCache?.frontmatter ? Object.keys(fileCache.frontmatter).length : 0;
+				const linksCount = fileCache?.links?.length || 0;
+
+				const message = `Last block length: ${lastBlockLength}\nProperties: ${propertiesCount}\nLinks: ${linksCount}`;
+				new Notice(message);
+			}
+		});
+
+		// This adds an editor command that can perform some operation on the current editor instance
+		this.addCommand({
 			id: 'sample-editor-command',
 			name: 'Sample editor command',
 			editorCallback: (editor: Editor, view: MarkdownView) => {
